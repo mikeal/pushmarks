@@ -36,9 +36,6 @@
 
 var EXPORTED_SYMBOLS = ['getDelicious', 'fullSync', 'addedByExtension', 'Service', 'Bookmark', 'getAllBookmarks'];
 
-var Base64 = {}; Components.utils.import('resource://pushmarks/modules/base64.js', Base64);
-var Base64 = Base64.Base64;
-
 var ios = Components.classes["@mozilla.org/network/io-service;1"]
                     .getService(Components.interfaces.nsIIOService);
 
@@ -60,48 +57,14 @@ var uuidgen = Components.classes["@mozilla.org/uuid-generator;1"]
                 .getService(Components.interfaces.nsIUUIDGenerator); 
                 
 Components.utils.import("resource://gre/modules/JSON.jsm");
+Components.utils.import("resource://pushmarks/modules/service.js")
 
 var withs = {}; Components.utils.import('resource://pushmarks/modules/withs.js', withs);
 var arrays = {}; Components.utils.import('resource://pushmarks/modules/arrays.js', arrays);
+var utils = {}; Components.utils.import('resource://pushmarks/modules/utils.js', utils);
 
 backstage = this;
 addedCallback = null;
-
-function tempfile(appention) {
-  if (appention == undefined) {
-    var appention = "mozmill.utils.tempfile"
-  }
-  var tempfile = Components.classes["@mozilla.org/file/directory_service;1"].getService(Components.interfaces.nsIProperties).get("TmpD", Components.interfaces.nsIFile);
-  tempfile.append(uuidgen.generateUUID().toString().replace('-', '').replace('{', '').replace('}',''))
-  tempfile.create(Components.interfaces.nsIFile.DIRECTORY_TYPE, 0777);
-  tempfile.append(appention);
-  tempfile.createUnique(Components.interfaces.nsIFile.NORMAL_FILE_TYPE, 0666);
-  // do whatever you need to the created file
-  return tempfile.clone();
-}
-
-function getWindows(type) {
-  if (type == undefined) {
-      var type = "";
-  }
-  var windows = []
-  var enumerator = Components.classes["@mozilla.org/appshell/window-mediator;1"]
-                     .getService(Components.interfaces.nsIWindowMediator)
-                     .getEnumerator(type);
-  while(enumerator.hasMoreElements()) {
-    windows.push(enumerator.getNext());
-  }
-  return windows;
-}
-
-function getMethodInWindows (methodName) {
-  for each(w in getWindows()) {
-    if (w[methodName] != undefined) {
-      return w[methodName];
-    }
-  }
-  throw "Method with name: '"+methodName+"' is not in any open window.";
-}
 
 function makeBaseAuth(user, pass) {
   var tok = user + ':' + pass;
@@ -111,54 +74,6 @@ function makeBaseAuth(user, pass) {
 
 var unfiledFolder = bmsvc.unfiledBookmarksFolder 
 
-var Service = {};
-Service.add = function (bookmark) {
-  if (Service.deliciousEnabled) {
-    
-    Service.deliciousAdd(bookmark);
-  }
-}
-Service.getFromDelicious = function (bookmark) {
-  
-}
-Service._deliciousAdd = function (bookmark) {
-  var XMLHttpRequest = getMethodInWindows('XMLHttpRequest');
-  var req = new XMLHttpRequest();  
-  var url = 'https://api.del.icio.us/v1/posts/add?';
-  url += '&url='+bookmark.uri;
-  url += '&description='+bookmark.title;
-  url += '&extended='+bookmark.title;
-  url += '&tags='+bookmark.tags.join(' ');
-  req.open('GET', url, false, Service.deliciousUsername, Service.deliciousPassword);
-  req.setRequestHeader('User-Agent', 'pushmarks-0.1');
-  req.send(null);
-  if (req.status != 200) {
-    throw "Request to delicious failed, status code "+req.status+". Message: "+String(req.responseText);
-  }
-  return req
-}
-Service._deliciousAddQueue = [];
-Service.deliciousAdd = function (bookmark) {
-  Service._deliciousAddQueue.push(bookmark);
-  if (Service.timeoutSet == false) {
-    Service.setTimeoutQueue();
-  }
-}
-Service.timeoutSet = false;
-Service.queueDo = function () {
-  if (Service._deliciousAddQueue.length == 0) {
-    hwindow.clearInterval(Service.timeoutSet);
-    Service.timeoutSet = false;
-  } else {
-    Service._deliciousAdd(Service._deliciousAddQueue.pop())
-  }
-}
-Service.setTimeoutQueue  = function () {
-  hwindow.Service = Service;
-  Service.timeoutSet = hwindow.setInterval("Service.queueDo()", 5000);
-}
-Service.deliciousUsername = null;
-Service.deliciousPassword = null;
 
 var Bookmark = function (uri, title, tags) {
   this.uri = uri;
@@ -207,7 +122,7 @@ Bookmark.prototype.push = function() {
 }
 
 // var getDelicious = function (username, password) {
-//   var XMLHttpRequest = getMethodInWindows('XMLHttpRequest');
+//   var XMLHttpRequest = utils.getMethodInWindows('XMLHttpRequest');
 //   var req = new XMLHttpRequest();  
 //   req.open('GET', 'https://api.del.icio.us/v1/posts/all', false, username, password);
 //   req.setRequestHeader('User-Agent', 'pushmarks-0.1')
@@ -245,7 +160,7 @@ var getDelicious = function(username, password) {
   file.initWithPath("/Users/mikeal/Documents/git/pushmarks/all.xml");
   // |file| is nsIFile
   data = readFile(file)
-  var parser = new getMethodInWindows('DOMParser')();
+  var parser = new utils.getMethodInWindows('DOMParser')();
   var dom = parser.parseFromString(data, "text/xml");
   posts = dom.getElementsByTagName('post');
   bookmarks = []
@@ -309,8 +224,8 @@ var ignoreBookmarks = [
   ]
 
 var getAllBookmarks = function () {
-  var f = tempfile()
-  var PlacesUtils = getMethodInWindows('PlacesUtils');
+  var f = utils.tempfile()
+  var PlacesUtils = utils.getMethodInWindows('PlacesUtils');
   PlacesUtils.backupBookmarksToFile(f);
   
   var recursizeChildAdd = function(node, hash) {
@@ -345,7 +260,7 @@ var myExt_bookmarkListener = {
   },
   onItemVisited: function(aBookmarkId, aVisitID, time) {},
   onItemMoved: function(aItemId, aOldParent, aOldIndex, aNewParent, aNewIndex) {},
-  QueryInterface: getMethodInWindows('XPCOMUtils').generateQI([Components.interfaces.nsINavBookmarkObserver])
+  QueryInterface: utils.getMethodInWindows('XPCOMUtils').generateQI([Components.interfaces.nsINavBookmarkObserver])
 };
 
 // An extension
