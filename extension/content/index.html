@@ -14,9 +14,9 @@ prefs = prefs.getBranch("extensions.pushmarks.");
 
 function save () {
   var prefValues = {
-	  "deliciousEnabled"   : $('input[@name=deliciousEnabled]')[0].checked,
-	  "deliciousUsername"  : $('input[@name=deliciousUsername]')[0].value,
-	  "deliciousPassword"  : $('input[@name=deliciousPassword]')[0].value,
+	  "deliciousEnabled"   : $('input[name=deliciousEnabled]')[0].checked,
+	  "deliciousUsername"  : $('input[name=deliciousUsername]')[0].value,
+	  "deliciousPassword"  : $('input[name=deliciousPassword]')[0].value,
 	};
 		
 	prefs.setBoolPref('delicious.enabled', prefValues.deliciousEnabled);
@@ -28,9 +28,9 @@ function save () {
 }  
 
 function initialize () {
-	$('input[@name=deliciousEnabled]')[0].checked = prefs.getBoolPref('delicious.enabled');
-	$('input[@name=deliciousUsername]')[0].value = prefs.getCharPref('delicious.username');
-	$('input[@name=deliciousPassword]')[0].value = prefs.getCharPref('delicious.password');
+	$('input[name=deliciousEnabled]')[0].checked = prefs.getBoolPref('delicious.enabled');
+	$('input[name=deliciousUsername]')[0].value = prefs.getCharPref('delicious.username');
+	$('input[name=deliciousPassword]')[0].value = prefs.getCharPref('delicious.password');
 }
 
 $(document).ready(initialize);
