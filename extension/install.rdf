@@ -5,7 +5,7 @@
      <em:id>pushmarks@mozilla.com</em:id>
      <em:name>PushMarks</em:name>
      <em:version>0.1</em:version>
-     <em:creator>Mikeal ROgers</em:creator>
+     <em:creator>Mikeal Rogers</em:creator>
      <em:description>Firefox extension that pushes bookmarks to public bookmark sharing sites.</em:description>
      <em:targetApplication>
        <!-- Firefox -->
