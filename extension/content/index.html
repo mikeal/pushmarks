@@ -22,16 +22,25 @@ function save () {
 	prefs.setBoolPref('delicious.enabled', prefValues.deliciousEnabled);
 	prefs.setCharPref('delicious.username', prefValues.deliciousUsername);
 	prefs.setCharPref('delicious.password', prefValues.deliciousPassword);
-	service = {}; 
+	var service = {}; 
 	Components.utils.import('resource://pushmarks/modules/service.js', service);
 	service.refreshFromPrefs();
 }  
+
+function sync() {
+	save();
+	var pushmarks = {};
+	Components.utils.import('resource://pushmarks/modules/init.js', pushmarks);
+	pushmarks.fullSync();
+}
 
 function initialize () {
 	$('input[name=deliciousEnabled]')[0].checked = prefs.getBoolPref('delicious.enabled');
 	$('input[name=deliciousUsername]')[0].value = prefs.getCharPref('delicious.username');
 	$('input[name=deliciousPassword]')[0].value = prefs.getCharPref('delicious.password');
 }
+
+
 
 $(document).ready(initialize);
 
@@ -41,8 +50,8 @@ $(document).ready(initialize);
     Delicious
     <input type="checkbox" name="deliciousEnabled"> enabled <br>
     Username: <input type="text" name="deliciousUsername" /> <br>
-    Password  <input type="text" name="deliciousPassword"/> <br>
-    <a href="javascript:save()">save</a>
+    Password  <input type="password" name="deliciousPassword"/> <br>
+    <a href="javascript:save()">save</a><tab><a href="javascript:sync()">sync</a>
     </div>
 </div>
 </body>

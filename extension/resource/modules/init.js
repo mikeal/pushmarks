@@ -121,17 +121,17 @@ Bookmark.prototype.push = function() {
   Service.add(this);
 }
 
-// var getDelicious = function (username, password) {
-//   var XMLHttpRequest = utils.getMethodInWindows('XMLHttpRequest');
-//   var req = new XMLHttpRequest();  
-//   req.open('GET', 'https://api.del.icio.us/v1/posts/all', false, username, password);
-//   req.setRequestHeader('User-Agent', 'pushmarks-0.1')
-//   req.send(null);
-//   if (req.status != 200) {
-//     throw "Request to delicious fails, status code "+req.status+". Message: "+String(req.responseText)
-//   }
-//   return req.responseXML;
-// }
+var getDelicious = function (username, password) {
+  var XMLHttpRequest = utils.getMethodInWindows('XMLHttpRequest');
+  var req = new XMLHttpRequest();  
+  req.open('GET', 'https://api.del.icio.us/v1/posts/all', false, username, password);
+  req.setRequestHeader('User-Agent', 'pushmarks-0.1')
+  req.send(null);
+  if (req.status != 200) {
+    throw "Request to delicious fails, status code "+req.status+". Message: "+String(req.responseText)
+  }
+  return req.responseXML;
+}
 
 
 var readFile = function (file) {
@@ -153,16 +153,26 @@ var readFile = function (file) {
   fstream.close();
   return data;
 }
-
+// 
 var getDelicious = function(username, password) {
-  var file = Components.classes["@mozilla.org/file/local;1"].
-                       createInstance(Components.interfaces.nsILocalFile);
-  file.initWithPath("/Users/mikeal/Documents/git/pushmarks/all.xml");
-  // |file| is nsIFile
-  data = readFile(file)
-  var parser = new utils.getMethodInWindows('DOMParser')();
-  var dom = parser.parseFromString(data, "text/xml");
-  posts = dom.getElementsByTagName('post');
+  // var file = Components.classes["@mozilla.org/file/local;1"].
+  //                      createInstance(Components.interfaces.nsILocalFile);
+  // file.initWithPath("/Users/mikeal/Documents/git/pushmarks/all.xml");
+  // // |file| is nsIFile
+  // data = readFile(file)
+  var XMLHttpRequest = utils.getMethodInWindows('XMLHttpRequest');
+  var req = new XMLHttpRequest();  
+  req.open('GET', 'https://api.del.icio.us/v1/posts/all', false, username, password);
+  req.setRequestHeader('User-Agent', 'pushmarks-0.1')
+  req.send(null);
+  if (req.status != 200) {
+    throw "Request to delicious fails, status code "+req.status+". Message: "+String(req.responseText)
+  }
+  // return 
+  // var data = req.responseXML;
+  // var parser = new utils.getMethodInWindows('DOMParser')();
+  // var dom = parser.parseFromString(data, "text/xml");
+  posts = req.responseXML.getElementsByTagName('post');
   bookmarks = []
   for each(post in posts) {
     if (post.getAttribute != undefined) {
@@ -188,7 +198,7 @@ importing = false;
 
 var fullSync = function() {
   importing = true;
-  var deliciousBookmarks = getDelicious(null, null);
+  var deliciousBookmarks = getDelicious(Service.deliciousUsername, Service.deliciousPassword);
   var localBookmarks = getAllBookmarks();
   for each(bookmark in deliciousBookmarks) {
     bookmark.save();
@@ -276,8 +286,15 @@ var MyExtension = {
   callbackArgs: [],
   _itemAdded: function (aItemId, aFolder, aIndex) {
     if (!livemarkService.isLivemark(aFolder) && 
-        !isAddedByExtension(aItemId)) {
-      
+        !isAddedByExtension(aItemId) &&
+        bmsvc.getItemType(aItemId) == 1) {
+      var uri = bmsvc.getBookmarkURI(aItemId);
+      var title = bmsvc.getItemTitle(aItemId);
+      if (title != null && title != 'History' && title != 'Tags') {
+        var bookmark = new Bookmark(uri.spec, title, taggingSvc.getTagsForURI(uri, {}));
+        consoleService.logStringMessage(String(bmsvc.getItemTitle(aItemId)))
+        bookmark.push();
+      }
     }
     
   },

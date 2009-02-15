@@ -35,6 +35,29 @@
 
 var EXPORTED_SYMBOLS = ['Service', 'refreshFromPrefs']
 
+var ios = Components.classes["@mozilla.org/network/io-service;1"]
+                    .getService(Components.interfaces.nsIIOService);
+
+var taggingSvc = Components.classes["@mozilla.org/browser/tagging-service;1"]
+                    .getService(Components.interfaces.nsITaggingService);
+
+var bmsvc = Components.classes["@mozilla.org/browser/nav-bookmarks-service;1"]
+                    .getService(Components.interfaces.nsINavBookmarksService);
+var consoleService = Components.classes["@mozilla.org/consoleservice;1"]
+                    .getService(Components.interfaces.nsIConsoleService);
+var livemarkService = Components.classes["@mozilla.org/browser/livemark-service;2"]
+                    .getService(Components.interfaces.nsILivemarkService);
+var hwindow = Components.classes["@mozilla.org/appshell/appShellService;1"]
+                .getService(Components.interfaces.nsIAppShellService)
+                .hiddenDOMWindow;
+var historyService = Components.classes["@mozilla.org/browser/nav-history-service;1"]
+                .getService(Components.interfaces.nsINavHistoryService);
+var uuidgen = Components.classes["@mozilla.org/uuid-generator;1"]
+                .getService(Components.interfaces.nsIUUIDGenerator);
+
+
+var withs = {}; Components.utils.import('resource://pushmarks/modules/withs.js', withs);
+var arrays = {}; Components.utils.import('resource://pushmarks/modules/arrays.js', arrays);
 var utils = {}; Components.utils.import('resource://pushmarks/modules/utils.js', utils);
 
 var Service = {};
@@ -93,6 +116,7 @@ prefs = prefs.getBranch("extensions.pushmarks.");
 
 var refreshFromPrefs = function () {
   Service.deliciousEnabled  = prefs.getBoolPref('delicious.enabled');
-  Service.deliciousUsername = prefs.getBoolPref('delicious.username');
-  Service.deliciousPassword = prefs.getBoolPref('delicious.password');
+  Service.deliciousUsername = prefs.getCharPref('delicious.username');
+  Service.deliciousPassword = prefs.getCharPref('delicious.password');
 }
+refreshFromPrefs();
