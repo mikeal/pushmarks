@@ -7,6 +7,8 @@ this_dir = os.path.abspath(os.path.dirname(__file__))
 
 def cli():
     sys.argv.append('--launch')
+    global_settings.MOZILLA_PLUGINS.append(os.path.join(this_dir, 'firebug-1.3.0-fx.xpi'))
+    global_settings.MOZILLA_PLUGINS.append(os.path.join(this_dir, 'venk.xpi'))
     global_settings.MOZILLA_PLUGINS.append(os.path.join(this_dir, 'extension'))
     jsbridge.cli(shell=False)
     

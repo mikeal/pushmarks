@@ -1,7 +1,18 @@
 <html>
 <head>
 	<title>PushMarks</title>
-	<script type="text/javascript" src="jquery-1.3.1.min.js"></script> 
+	<script type="text/javascript" src="jquery-1.3.1.min.js"></script>
+	<script type="text/javascript" src="jquery-ui-1.6rc6.min.js"></script> 
+	<link type="text/css" href="theme/ui.all.css" rel="Stylesheet" />
+	<style type="text/css">
+		body{ font: 10px Verdana, sans-serif;}
+		/*demo page css*/
+		#dialog_link {padding: .4em 1em .4em 20px;text-decoration: none;position: relative;}
+		#dialog_link span.ui-icon {margin: 0 5px 0 0;position: absolute;left: .2em;top: 50%;margin-top: -8px;}
+		ul#icons {margin: 0; padding: 0;}
+		ul#icons li {margin: 2px; position: relative; padding: 4px 0; cursor: pointer; float: left;  list-style: none;}
+		ul#icons span.ui-icon {float: left; margin: 0 4px;}
+	</style>
 </head>
 
 <body>
@@ -44,15 +55,91 @@ function initialize () {
 
 $(document).ready(initialize);
 
-</script>
+//anonymous self calling function to instantiate tabs and accordion widgets
+$(function() {
+	$("#tabs").tabs();
+	$("#dialog").dialog({
+	  autoOpen: false,
+	  modal:true,
+    resizable:false,
+    overlay: { 
+        opacity: 0.5, 
+        background: "black" 
+    },
+    buttons: { 
+     "Close": function() { 
+         $(this).dialog("close"); 
+     } }
+	});
+  $("#accordion").accordion({
+  			header: "h3"
+  });
+	$("#progressbar").progressbar({
+			value: 0
+	});
+});
 
- <div class="in">
-    Delicious
-    <input type="checkbox" name="deliciousEnabled"> enabled <br>
-    Username: <input type="text" name="deliciousUsername" /> <br>
-    Password  <input type="password" name="deliciousPassword"/> <br>
-    <a href="javascript:save()">save</a><tab><a href="javascript:sync()">sync</a>
+		
+</script>
+<div id="tabs">
+	<ul>
+		<li><a href="#tabs-1" style="font-size:18px;">Pushmarks</a></li>
+		<li><a href="#tabs-2" style="font-size:18px;">Information</a></li>
+	</ul>
+	<div id="tabs-1" class="in">
+	  
+	  <div id="accordion">
+    	<div>
+    		<h3><a href="#">Delicious</a></h3>
+    		<div> 
+            <span style="float:right;font-weight:bold;"><input type="checkbox" name="deliciousEnabled"> enabled</span>
+            <table>
+              <tr><td>Username: </td><td><input type="text" name="deliciousUsername" /></td></tr>
+              <tr><td>Password: </td><td><input type="password" name="deliciousPassword"/></td></tr>
+              <tr><td>&nbsp;</td><tr>
+              <tr>
+                <td>&nbsp;</td>
+                <td>
+                  <button onclick='javascript:save()' class="ui-state-default ui-corner-all">Save</button>
+                  <button onclick='javascript:sync();$("dialog").dialog("open");' class="ui-state-default ui-corner-all">Sync</button>
+                </td>
+              </tr>
+              <tr>
+            </table>
+    	  </div>
+    	</div>
+    	<div>
+    		<h3><a href="#">Ma.gnolia</a></h3>
+    		<div> 
+          <span style="float:right;font-weight:bold;"><input type="checkbox" name="magnoliaEnabled" disabled="true"> enabled</span>
+          <table>
+            <tr><td>Username: </td><td><input type="text" name="magnoliaUsername" disabled="true"/></td></tr>
+            <tr><td>Password: </td><td><input type="password" name="magnoliaPassword" disabled="true"/></td></tr>
+            <tr><td>&nbsp;</td><tr>
+            <tr>
+              <td>&nbsp;</td>
+              <td>
+                <button onclick='javascript:return;' class="ui-state-default ui-corner-all">Save</button>
+                <button onclick='javascript:return;' class="ui-state-default ui-corner-all">Sync</button>
+              </td>
+            </tr>
+          </table>	
+        </div>
+    	</div>
     </div>
+
+  </div>
+  
+  <div id="tabs-2">
+    All kinds of cool information and help about pushmarks lives here.
+    contact me: mikeal dot rogers at gmail dot com
+	</div>
+	
 </div>
+
+<div id="dialog" title="Progress">
+	<div id="progressbar"></div>
+</div>
+
 </body>
 </html>
