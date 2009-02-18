@@ -15,5 +15,6 @@
          <em:maxVersion>3.2a1pre</em:maxVersion>
        </Description>
      </em:targetApplication>
+	 <em:optionsURL>chrome://pushmarks/content/preferences.xul</em:optionsURL>
    </Description>
 </RDF>
