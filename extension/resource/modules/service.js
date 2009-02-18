@@ -74,7 +74,7 @@ Service._deliciousAdd = function (bookmark) {
   var XMLHttpRequest = utils.getMethodInWindows('XMLHttpRequest');
   var req = new XMLHttpRequest();  
   var url = 'https://api.del.icio.us/v1/posts/add?';
-  url += '&url='+bookmark.uri;
+  url += '&url='+bookmark.uri.split('#')[0];
   url += '&description='+bookmark.title;
   url += '&extended='+bookmark.title;
   url += '&tags='+bookmark.tags.join(' ');
