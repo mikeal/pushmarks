@@ -56,10 +56,8 @@ var historyService = Components.classes["@mozilla.org/browser/nav-history-servic
 var uuidgen = Components.classes["@mozilla.org/uuid-generator;1"]
                 .getService(Components.interfaces.nsIUUIDGenerator); 
 
-if (!JSON) {
-  Components.utils.import("resource://gre/modules/JSON.jsm");
-  Components.utils.import("resource://pushmarks/modules/service.js")
-}                
+Components.utils.import("resource://gre/modules/JSON.jsm");
+Components.utils.import("resource://pushmarks/modules/service.js")
 
 var withs = {}; Components.utils.import('resource://pushmarks/modules/withs.js', withs);
 var arrays = {}; Components.utils.import('resource://pushmarks/modules/arrays.js', arrays);
