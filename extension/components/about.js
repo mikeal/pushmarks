@@ -62,7 +62,7 @@ PushMarksAboutHandler.prototype = {
     },
 
     classDescription: "About PushMarks Page",
-    classID: Components.ID("3a54db0f-281a-4af7-931c-de747c37b423"),
+    classID: Components.ID('5e9ec3c2-fe12-11dd-b474-001f5bd9235c'),
     contractID: "@mozilla.org/network/protocol/about;1?what=pushmarks",
     QueryInterface: XPCOMUtils.generateQI([Ci.nsIAboutModule])
 }
