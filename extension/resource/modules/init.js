@@ -58,6 +58,7 @@ var uuidgen = Components.classes["@mozilla.org/uuid-generator;1"]
 
 Components.utils.import("resource://gre/modules/JSON.jsm");
 Components.utils.import("resource://pushmarks/modules/service.js")
+Components.utils.import("resource://gre/modules/XPCOMUtils.jsm");
 
 var withs = {}; Components.utils.import('resource://pushmarks/modules/withs.js', withs);
 var arrays = {}; Components.utils.import('resource://pushmarks/modules/arrays.js', arrays);
@@ -270,7 +271,7 @@ var myExt_bookmarkListener = {
   },
   onItemVisited: function(aBookmarkId, aVisitID, time) {},
   onItemMoved: function(aItemId, aOldParent, aOldIndex, aNewParent, aNewIndex) {},
-  QueryInterface: utils.getMethodInWindows('XPCOMUtils').generateQI([Components.interfaces.nsINavBookmarkObserver])
+  QueryInterface: XPCOMUtils.generateQI([Components.interfaces.nsINavBookmarkObserver])
 };
 
 // An extension
