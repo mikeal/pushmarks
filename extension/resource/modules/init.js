@@ -46,8 +46,6 @@ var bmsvc = Components.classes["@mozilla.org/browser/nav-bookmarks-service;1"]
                     .getService(Components.interfaces.nsINavBookmarksService);
 var consoleService = Components.classes["@mozilla.org/consoleservice;1"]
                     .getService(Components.interfaces.nsIConsoleService);
-var livemarkService = Components.classes["@mozilla.org/browser/livemark-service;2"]
-                    .getService(Components.interfaces.nsILivemarkService);
 var hwindow = Components.classes["@mozilla.org/appshell/appShellService;1"]
                 .getService(Components.interfaces.nsIAppShellService)
                 .hiddenDOMWindow;
@@ -56,7 +54,6 @@ var historyService = Components.classes["@mozilla.org/browser/nav-history-servic
 var uuidgen = Components.classes["@mozilla.org/uuid-generator;1"]
                 .getService(Components.interfaces.nsIUUIDGenerator); 
 
-Components.utils.import("resource://gre/modules/JSON.jsm");
 Components.utils.import("resource://pushmarks/modules/service.js")
 Components.utils.import("resource://gre/modules/XPCOMUtils.jsm");
 
@@ -256,7 +253,7 @@ var getAllBookmarks = function () {
     return hash
   }
   
-  return recursizeChildAdd(JSON.fromString(readFile(f)), {});
+  return recursizeChildAdd(JSON.parse(readFile(f)), {});
 }
 
 // An nsINavBookmarkObserver
@@ -286,6 +283,8 @@ var MyExtension = {
   },
   callbackArgs: [],
   _itemAdded: function (aItemId, aFolder, aIndex) {
+    var livemarkService = Components.classes["@mozilla.org/browser/livemark-service;2"]
+                        .getService(Components.interfaces.nsILivemarkService);
     if (!livemarkService.isLivemark(aFolder) && 
         !isAddedByExtension(aItemId) &&
         bmsvc.getItemType(aItemId) == 1) {

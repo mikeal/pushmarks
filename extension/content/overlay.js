@@ -35,7 +35,6 @@
 
 var init = {}; Components.utils.import('resource://pushmarks/modules/init.js', init);
 
-
 var Prefs = Components.classes["@mozilla.org/preferences-service;1"]
                    .getService(Components.interfaces.nsIPrefService);
 Prefs = Prefs.getBranch("extensions.my_extension_name.");

@@ -45,8 +45,6 @@ var bmsvc = Components.classes["@mozilla.org/browser/nav-bookmarks-service;1"]
                     .getService(Components.interfaces.nsINavBookmarksService);
 var consoleService = Components.classes["@mozilla.org/consoleservice;1"]
                     .getService(Components.interfaces.nsIConsoleService);
-var livemarkService = Components.classes["@mozilla.org/browser/livemark-service;2"]
-                    .getService(Components.interfaces.nsILivemarkService);
 var hwindow = Components.classes["@mozilla.org/appshell/appShellService;1"]
                 .getService(Components.interfaces.nsIAppShellService)
                 .hiddenDOMWindow;

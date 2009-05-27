@@ -1,14 +1,17 @@
-import os, sys
+import os
+import mozrunner
 
-import jsbridge
-from jsbridge import global_settings
+parent_path = os.path.abspath(os.path.dirname(__file__))
+extension_path = os.path.join(parent_path, 'extension')
 
-this_dir = os.path.abspath(os.path.dirname(__file__))
+class CLI(mozrunner.CLI):
+    def get_profile(self, *args, **kwargs):
+        profile = super(CLI, self).get_profile(*args, **kwargs)
+        profile.install_plugin(extension_path)
 
-def cli():
-    sys.argv.append('--launch')
-    global_settings.MOZILLA_PLUGINS.append(os.path.join(this_dir, 'extension'))
-    jsbridge.cli(shell=False)
-    
+        return profile
+
+
+
 if __name__ == "__main__":
-    cli()
+    CLI().run()
